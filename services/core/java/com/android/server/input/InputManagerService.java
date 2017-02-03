@@ -291,6 +291,9 @@ public class InputManagerService extends IInputManager.Stub
     /** Switch code: Camera lens cover. When set the lens is covered. */
     public static final int SW_CAMERA_LENS_COVER = 0x09;
 
+    /** Switch code: Rotation Lock.  When set, rotation is locked. */
+    public static final int SW_ROTATE_LOCK = 0x0c;
+
     // Viewport constants defined in InputReader.h.
     public static final int VIEWPORT_DEFAULT = 1;
     public static final int VIEWPORT_EXTERNAL = 2;
@@ -306,6 +309,7 @@ public class InputManagerService extends IInputManager.Stub
     public static final int SW_JACK_BITS =
             SW_HEADPHONE_INSERT_BIT | SW_MICROPHONE_INSERT_BIT | SW_JACK_PHYSICAL_INSERT_BIT | SW_LINEOUT_INSERT_BIT;
     public static final int SW_CAMERA_LENS_COVER_BIT = 1 << SW_CAMERA_LENS_COVER;
+    public static final int SW_ROTATE_LOCK_BIT = 1 << SW_ROTATE_LOCK;
 
     /** Whether to use the dev/input/event or uevent subsystem for the audio jack. */
     final boolean mUseDevInputEventForAudioJack;
@@ -1873,6 +1877,11 @@ public class InputManagerService extends IInputManager.Stub
                     switchMask);
         }
 
+        if ((switchMask & SW_ROTATE_LOCK_BIT) != 0) {
+            final boolean isLocked = ((switchValues & SW_ROTATE_LOCK_BIT) != 0);
+            mWindowManagerCallbacks.notifyRotateLockSwitchChanged(whenNanos, isLocked);
+        }
+
         if ((switchMask & SW_TABLET_MODE_BIT) != 0) {
             SomeArgs args = SomeArgs.obtain();
             args.argi1 = (int) (whenNanos & 0xFFFFFFFF);
@@ -2073,6 +2082,8 @@ public class InputManagerService extends IInputManager.Stub
         public void notifyLidSwitchChanged(long whenNanos, boolean lidOpen);
 
         public void notifyCameraLensCoverSwitchChanged(long whenNanos, boolean lensCovered);
+
+        public void notifyRotateLockSwitchChanged(long whenNanos, boolean isLocked);
 
         public void notifyInputChannelBroken(InputWindowHandle inputWindowHandle);
 
