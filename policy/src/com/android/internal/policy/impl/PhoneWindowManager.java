@@ -3634,6 +3634,21 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
     }
 
+    /** {@inheritDoc} */
+    public void notifyRotateLockSwitchChanged(long whenNanos, boolean isLocked) {
+        // do nothing if headless
+        if (mHeadless) return;
+
+        try {
+            if (isLocked)
+                mWindowManager.freezeRotation(-1);
+            else
+                mWindowManager.thawRotation();
+        } catch (RemoteException e) {
+            // Ignore
+        }
+    }
+
     void setHdmiPlugged(boolean plugged) {
         if (mHdmiPlugged != plugged) {
             mHdmiPlugged = plugged;
