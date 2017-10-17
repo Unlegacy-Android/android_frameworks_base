@@ -307,7 +307,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         ResolveInfo resolved = resolveCameraIntent();
         boolean isCameraDisabled =
                 (mPhoneStatusBar != null) && !mPhoneStatusBar.isCameraAllowedByAdmin();
-        boolean visible = !isCameraDisabled() && resolved != null
+        boolean visible = !isCameraDisabled && resolved != null
                 && getResources().getBoolean(R.bool.config_keyguardShowCameraAffordance)
                 && mUserSetupComplete;
         mCameraImageView.setVisibility(visible ? View.VISIBLE : View.GONE);
