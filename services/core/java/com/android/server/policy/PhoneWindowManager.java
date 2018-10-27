@@ -2544,7 +2544,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
             // Volume wake
             mVolumeWakeScreen = (Settings.System.getIntForUser(resolver,
-                    Settings.System.VOLUME_WAKE_SCREEN, 0, UserHandle.USER_CURRENT) == 1);
+                    Settings.System.VOLUME_WAKE_SCREEN, SystemProperties
+                    .getBoolean("persist.wm." + VOLUME_WAKE_SCREEN,
+                    false) ? 1 : 0, UserHandle.USER_CURRENT) == 1);
 
         }
         synchronized (mWindowManagerFuncs.getWindowManagerLock()) {
